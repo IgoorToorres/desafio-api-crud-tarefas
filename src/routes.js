@@ -50,8 +50,28 @@ export const routes = [
                 completed
             } = req.body
 
-            database.update('tasks', id, {title, description, completed})
+            database.update('tasks', id, { title, description, completed })
 
+            return res.writeHead(204).end()
+        }
+    },
+    {
+        method: 'PATCH',
+        path: buildRoutePath('/tarefas/:id'),
+        handler: (req, res) => {
+            const { id } = req.params
+            const {completed} = req.body
+
+            database.updatePartial('tasks', id, {completed})
+            return res.writeHead(204).end()
+        }
+    },
+    {
+        method: 'DELETE',
+        path: buildRoutePath('/tarefas/:id'),
+        handler: (req, res) => {
+            const { id } = req.params
+            database.delete('tasks', id)
             return res.writeHead(204).end()
         }
     },

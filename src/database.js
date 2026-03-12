@@ -51,6 +51,19 @@ export class Database {
         }
     }
 
+    updatePartial(table, id, data) {
+        const rowIndex = this.#database[table].findIndex(row => row.id === id)
+        if (rowIndex > -1) {
+            this.#database[table][rowIndex] = {
+                ...this.#database[table][rowIndex],
+                ...data
+            }
+            this.#persist()
+            return this.#database[table][rowIndex]
+        }
+        return null
+    }
+
     delete(table, id) {
         const rowIndex = this.#database[table].findIndex(row => row.id === id)
         if (rowIndex > -1) {

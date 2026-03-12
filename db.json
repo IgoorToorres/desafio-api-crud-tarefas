@@ -7,12 +7,6 @@
             "completed": false
         },
         {
-            "id": "a439cccf-5dd7-4601-8e65-a4da11194899",
-            "title": "primeira tarefa",
-            "description": "testando o cadastro da primeira tarefa",
-            "completed": false
-        },
-        {
             "id": "fd4137db-2259-4548-b47b-7563d0de9bb2",
             "title": "terceira tarefa",
             "description": "testando o cadastro da terceira tarefa busca",
