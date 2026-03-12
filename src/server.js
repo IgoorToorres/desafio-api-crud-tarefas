@@ -6,14 +6,17 @@ import { extractQueryParams } from "./utils/extract-query-params.js";
 const server = http.createServer(async (req, res) => {
 
     const { method, url } = req;
-    console.log(method, url)
-    await json(req, res);
+
+    const contentType = req.headers["content-type"] || ""
+    if (!contentType.startsWith("multipart/form-data")) {
+        await json(req, res)
+    }
 
     const route = routes.find(route => {
         return route.method === method && route.path.test(url)
     })
 
-    if(route){
+    if (route) {
         const routeParams = req.url.match(route.path)
 
         const { query, ...params } = routeParams.groups

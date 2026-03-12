@@ -1,8 +1,12 @@
 import { Database } from "./database.js";
 import { buildRoutePath } from "./utils/build-rout-path.js";
 import { randomUUID } from "node:crypto"
+import multer from "multer"
+import { importCsv } from "./utils/import-csv.js";
 
 const database = new Database()
+const upload = multer({dest: "/tmp"})
+
 
 export const routes = [
     {
@@ -35,7 +39,7 @@ export const routes = [
             })
 
             database.insert('tasks', task)
-            return res.writeHead(201).end()
+            return res.writeHead(201).end(JSON.stringify({message: "Tarefa criado com sucesso"}))
         }
     },
     {
@@ -73,6 +77,29 @@ export const routes = [
             const { id } = req.params
             database.delete('tasks', id)
             return res.writeHead(204).end()
+        }
+    },
+    {
+        method: 'POST',
+        path: buildRoutePath('/tarefas/import'),
+        handler: (req, res) => {
+            upload.single("file")(req, res, async err => {
+                if(err){
+                    return res.writeHead(400).end()
+                }
+
+                if(!req.file){
+                    return res
+                        .writeHead(400, { "Content-Type": "application/json" })
+                        .end(JSON.stringify({message: "Arquivo não enviado"}))
+                }
+
+                const result = await importCsv(req.file.path, database);
+
+                return res
+                    .writeHead(201)
+                    .end(JSON.stringify(result))
+            })
         }
     },
 
